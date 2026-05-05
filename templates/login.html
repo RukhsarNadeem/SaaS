@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Login – Student Record System</title>
+    <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        :root {
+            --bg: #0f0c1a;
+            --card: #1a1530;
+            --border: rgba(138, 99, 255, 0.25);
+            --accent: #8a63ff;
+            --accent2: #ff6b9d;
+            --text: #e8e0ff;
+            --muted: #8b83a8;
+        }
+
+        body {
+            font-family: 'Sora', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        /* Animated background */
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background:
+                radial-gradient(ellipse 60% 50% at 20% 20%, rgba(138,99,255,0.15) 0%, transparent 70%),
+                radial-gradient(ellipse 40% 40% at 80% 80%, rgba(255,107,157,0.12) 0%, transparent 70%);
+            z-index: 0;
+        }
+
+        .grid-bg {
+            position: fixed;
+            inset: 0;
+            background-image:
+                linear-gradient(rgba(138,99,255,0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(138,99,255,0.05) 1px, transparent 1px);
+            background-size: 40px 40px;
+            z-index: 0;
+        }
+
+        .wrap {
+            position: relative;
+            z-index: 1;
+            width: 100%;
+            max-width: 420px;
+            padding: 20px;
+        }
+
+        .brand {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+
+        .brand-icon {
+            font-size: 48px;
+            display: block;
+            margin-bottom: 10px;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-8px); }
+        }
+
+        .brand h1 {
+            font-size: 22px;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--accent), var(--accent2));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .brand p {
+            font-size: 13px;
+            color: var(--muted);
+            margin-top: 4px;
+        }
+
+        .card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 36px 32px;
+            box-shadow: 0 24px 64px rgba(0,0,0,0.4), 0 0 0 1px rgba(138,99,255,0.1);
+            animation: slideUp 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        .field {
+            margin-bottom: 18px;
+        }
+
+        .field label {
+            display: block;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            margin-bottom: 8px;
+        }
+
+        .field input {
+            width: 100%;
+            padding: 13px 16px;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            color: var(--text);
+            font-family: 'Sora', sans-serif;
+            font-size: 14px;
+            transition: border-color 0.2s, box-shadow 0.2s;
+            outline: none;
+        }
+
+        .field input:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(138,99,255,0.15);
+        }
+
+        .role-toggle {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 24px;
+        }
+
+        .role-btn {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            background: transparent;
+            color: var(--muted);
+            font-family: 'Sora', sans-serif;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .role-btn.active {
+            background: rgba(138,99,255,0.15);
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+
+        .btn-login {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, var(--accent), #6a3ff5);
+            border: none;
+            border-radius: 10px;
+            color: white;
+            font-family: 'Sora', sans-serif;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-login::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(255,255,255,0.1), transparent);
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+
+        .btn-login:hover::after { opacity: 1; }
+        .btn-login:hover { transform: translateY(-1px); box-shadow: 0 8px 24px rgba(138,99,255,0.4); }
+        .btn-login:active { transform: translateY(0); }
+
+        .alert {
+            padding: 12px 16px;
+            border-radius: 10px;
+            font-size: 13px;
+            margin-bottom: 18px;
+            display: none;
+        }
+
+        .alert.error {
+            background: rgba(255, 75, 75, 0.12);
+            border: 1px solid rgba(255, 75, 75, 0.3);
+            color: #ff7b7b;
+        }
+
+        .alert.success {
+            background: rgba(75, 210, 143, 0.12);
+            border: 1px solid rgba(75, 210, 143, 0.3);
+            color: #4bd28f;
+        }
+
+        .divider {
+            text-align: center;
+            font-size: 12px;
+            color: var(--muted);
+            margin: 20px 0 16px;
+            position: relative;
+        }
+
+        .divider::before, .divider::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            width: 38%;
+            height: 1px;
+            background: var(--border);
+        }
+        .divider::before { left: 0; }
+        .divider::after { right: 0; }
+
+        .demo-creds {
+            background: rgba(138,99,255,0.07);
+            border: 1px solid rgba(138,99,255,0.15);
+            border-radius: 10px;
+            padding: 12px 14px;
+            font-size: 12px;
+            color: var(--muted);
+            line-height: 1.8;
+        }
+
+        .demo-creds strong { color: var(--accent); }
+
+        .spinner {
+            display: none;
+            width: 18px;
+            height: 18px;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-top-color: white;
+            border-radius: 50%;
+            animation: spin 0.6s linear infinite;
+            margin: 0 auto;
+        }
+
+        @keyframes spin { to { transform: rotate(360deg); } }
+    </style>
+</head>
+<body>
+<div class="grid-bg"></div>
+
+<div class="wrap">
+    <div class="brand">
+        <span class="brand-icon">🎓</span>
+        <h1>Student Record System</h1>
+        <p>Sign in to access your portal</p>
+    </div>
+
+    <div class="card">
+        <div class="role-toggle">
+            <button class="role-btn active" onclick="setRole('student', this)">👨‍🎓 Student</button>
+            <button class="role-btn" onclick="setRole('teacher', this)">👩‍🏫 Teacher</button>
+        </div>
+
+        <div class="alert" id="alert"></div>
+
+        <div class="field">
+            <label>Username</label>
+            <input type="text" id="username" placeholder="Enter your username" autocomplete="username">
+        </div>
+
+        <div class="field">
+            <label>Password</label>
+            <input type="password" id="password" placeholder="Enter your password" autocomplete="current-password">
+        </div>
+
+        <button class="btn-login" onclick="doLogin()" id="loginBtn">
+            <span id="btnText">Sign In</span>
+            <div class="spinner" id="spinner"></div>
+        </button>
+
+        <div class="divider">Default credentials</div>
+
+        <div class="demo-creds">
+            <strong>Teacher:</strong> admin / admin123<br>
+            <strong>Student 1:</strong> student1 / pass123<br>
+            <strong>Student 2:</strong> student2 / pass456
+        </div>
+    </div>
+</div>
+
+<script>
+    let selectedRole = 'student';
+
+    function setRole(role, btn) {
+        selectedRole = role;
+        document.querySelectorAll('.role-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+    }
+
+    document.getElementById('password').addEventListener('keydown', e => {
+        if (e.key === 'Enter') doLogin();
+    });
+
+    async function doLogin() {
+        const username = document.getElementById('username').value.trim();
+        const password = document.getElementById('password').value.trim();
+        const alert = document.getElementById('alert');
+        const btnText = document.getElementById('btnText');
+        const spinner = document.getElementById('spinner');
+
+        if (!username || !password) {
+            showAlert('Please enter both username and password.', 'error');
+            return;
+        }
+
+        btnText.style.display = 'none';
+        spinner.style.display = 'block';
+
+        try {
+            const res = await fetch('/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username, password })
+            });
+
+            const data = await res.json();
+
+            if (data.success) {
+                showAlert(data.message, 'success');
+                setTimeout(() => window.location.href = '/dashboard', 800);
+            } else {
+                showAlert(data.message || 'Login failed.', 'error');
+            }
+        } catch (err) {
+            showAlert('Connection error. Please try again.', 'error');
+        } finally {
+            btnText.style.display = 'block';
+            spinner.style.display = 'none';
+        }
+    }
+
+    function showAlert(msg, type) {
+        const el = document.getElementById('alert');
+        el.textContent = msg;
+        el.className = `alert ${type}`;
+        el.style.display = 'block';
+        setTimeout(() => el.style.display = 'none', 4000);
+    }
+</script>
+</body>
+</html>
